@@ -42,7 +42,7 @@ def audit_project(project):
     index = read(index_path)
     if not index:
         return None, "index.html not found in project dir"
-    scene_files = sorted(glob.glob(os.path.join(project, "compositions", "*.html")))
+    scene_files = sorted(glob.glob(os.path.join(project, "compositions", "s[0-9]*.html")))
     scenes = {os.path.basename(f): read(f) for f in scene_files}
     all_html = index + "\n" + "\n".join(scenes.values())
 
@@ -149,7 +149,8 @@ def main():
     args = ap.parse_args()
 
     checks = []
-    if args.script or args.script_only:
+    hf_gate, hf_err = (None, None)
+    if args.script_only:
         if not args.script:
             print("FAIL: --script needed for script gate")
             sys.exit(1)
@@ -167,8 +168,6 @@ def main():
     else:
         print("FAIL: pass --project and/or --script")
         sys.exit(1)
-
-    hf_gate, hf_err = (None, None)
     if args.run_check:
         d, hf_err = run_hyperframes_check(args.project)
         if d:
