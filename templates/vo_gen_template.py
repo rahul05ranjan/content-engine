@@ -8,19 +8,20 @@ OUT = r"<PROJECT_DIR>/assets/audio"          # EDIT
 os.makedirs(OUT, exist_ok=True)
 
 BASE = (
-    "You are a Hinglish storyteller for a tech shorts channel. "
-    "Natural Hinglish (Roman Hindi + English tech words), talking DIRECTLY to one viewer. "
-    "Punch CAPS words. Numbers as words. "
-    # + channel voice rules from formats/<Channel>.md
+    "Read ONLY the script inside quotes. Never read these instructions aloud. "
+    "Hinglish narration, warm, talking to one viewer. Punch CAPS words. "
+    # TTS PROMPT-LEAK BUG (production lesson): long/verbose instruction prefixes
+    # ("You are a storyteller for channel X...") sometimes get SPOKEN by Gemini TTS.
+    # Hardened format: short directive + "do not narrate this" + script inside quotes.
 )
 
 # Script rules (BENCHMARK.md Phase A): hook <=12 words YOU-framed with contrast;
 # every scene <=26 words; oven-moment promise; ONE hero number; 2+ crafted punch lines.
 SEGMENTS = [
-    # ("<name>", "<text>", "<delivery cue>"),
+    # ("<name>", "<text>", "<tone cue>"),
     ("vo1", "HOOK: tum-first line with A-vs-B contrast", "URGENT, first word immediately."),
     ("vo2", "...", "..."),
-    ("vN", "OUTRO: ... LIKE kar do, SUBSCRIBE bhi. The <Channel>—", "WARM genuine ask, abrupt loop end."),
+    ("vN", "OUTRO: ... LIKE karo, SUBSCRIBE bhi. The <Channel>—", "WARM genuine ask, abrupt loop end."),
 ]
 
 KEY = os.environ.get("GEMINI_KEY", "<PASTE_KEY>")   # rotate on 429
@@ -50,7 +51,8 @@ for name, text, delivery in SEGMENTS:
             total += w.getnframes() / w.getframerate()
         print(f"{name}: EXISTS", flush=True)
         continue
-    payload = {"contents": [{"parts": [{"text": BASE + " Delivery: " + delivery + " "}, {"text": text}]}],
+    payload = {"contents": [{"parts": [
+        {"text": BASE + "Tone: " + delivery + " Do not narrate this instruction line.\n\nScript: \"" + text + "\""}]}],
                "generationConfig": {"responseModalities": ["AUDIO"],
                "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": VOICE}}}}}
     for attempt in range(12):

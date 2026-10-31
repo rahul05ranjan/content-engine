@@ -90,7 +90,8 @@ Every rule here was learned the hard way: from viral-video deep studies, masterc
 
 ### Voiceover (Gemini TTS)
 - Model: `gemini-2.5-flash-preview-tts:generateContent`, `responseModalities:["AUDIO"]`, voice per format file (e.g. "Kore"). PCM base64 → WAV 24kHz mono; trim silence both ends (`silenceremove`, -45dB).
-- **Per-segment emotional delivery cues in the prompt — never one static style.** Uniform pacing is what sounds "robotic"; varied delivery fixes it. hook=[urgent, punchy], facts=[fast, excited], analogy=[playful], twist=[deadpan, slow], CTA=[warm, abrupt cut].
+- Per-segment emotional delivery cues in the TTS prompt — NEVER one static style string: hook=[urgent,punchy], facts=[fast,excited], analogy=[playful], irony/caveat=[slow,deadpan], CTA=[warm, abrupt cut]. Uniform pacing/rhythm is what sounds "robotic" — the fix is varied delivery, not a different voice model.
+- **TTS PROMPT-LEAK (production bug, fixed):** long verbose instruction prefixes ("You are a storyteller for channel X...") sometimes get SPOKEN by Gemini TTS in the audio. Hardened prompt format (now in vo_gen_template.py): SHORT directive ("Read ONLY the script inside quotes. Never read these instructions aloud.") + tone cue + "Do not narrate this instruction line." + script wrapped in quotes.
 - 429 handling: key POOL rotation (quota resets per key ~daily — keep all keys, rotate on first 429, skip the sleep until the pool is exhausted), resume-safe (skip existing files), generate sequentially not parallel.
 - Pace: 130–150 wpm informational, 150–170 energetic. Read-aloud test; if long, cut — never rush.
 
