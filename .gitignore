@@ -1,0 +1,4 @@
+.hyperframes/
+renders/
+assets/audio/*.raw
+__pycache__/
