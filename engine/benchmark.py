@@ -109,7 +109,7 @@ def audit_script(script_text):
 
     add("A1", "Script", "Hook <=12 words (speed to value)", 8, len(words0) <= 14, f"hook has {len(words0)} words")
     add("A3", "Script", "YOU-framing in hook (tum/aap/you/your)", 6,
-        re.search(r"\b(tum|tumhara|tumhare|aap|aapka|you|your)\b", hook, re.I) is not None)
+        re.search(r"\b(tum|tumhara|tumhari|tumhare|tumhe|tumhen|tumse|aap|aapka|aapki|you|your)\b", hook, re.I) is not None)
     add("A4", "Script", "Contrast words present (par/but/vs/ya/while)", 4,
         re.search(r"\b(par|but|vs\.?|magar|jabki|while)\b", hook, re.I) is not None,
         "self-review: is there an A-vs-B contrast?")
