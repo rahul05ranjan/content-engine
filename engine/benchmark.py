@@ -117,7 +117,7 @@ def audit_script(script_text):
         re.search(r"\b(end mein|last mein|finally|ab|suno|dekho|twist|raaz|secret|payoff)\b", script_text, re.I) is not None,
         "self-review: promise -> build -> golden shot?")
     add("A6", "Script", "Hero-number cue in second half", 3,
-        re.search(r"[0-9₹$]|percent|hazaar|crore|lakh", " ".join(segs[len(segs) // 2:]), re.I) is not None)
+        re.search(r"[0-9₹$]|percent|billion|trillion|million|crore|karod|hazaar|sau|pachaas|tees|bees|chalis|satais|taintalis", " ".join(segs[len(segs) // 2:]), re.I) is not None)
     longest = max(len(s.split()) for s in segs)
     add("A7", "Script", "Max 26 words per scene", 3, longest <= 26, f"longest segment: {longest} words")
     add("A16", "Script", "Crafted punch lines (self-review)", 2, True,
@@ -141,22 +141,32 @@ def run_hyperframes_check(project):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--project", required=True)
+    ap.add_argument("--project", help="video project dir (skip for script-only gate)")
     ap.add_argument("--script", help="plain-text script file (segments separated by blank lines)")
+    ap.add_argument("--script-only", action="store_true", help="score ONLY the script (Phase A)")
     ap.add_argument("--run-check", action="store_true", help="also run `npx hyperframes check`")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
 
-    checks, err = audit_project(args.project)
-    if err:
-        print(f"FAIL: {err}")
-        sys.exit(1)
-
-    if args.script:
-        checks += audit_script(read(args.script))
+    checks = []
+    if args.script or args.script_only:
+        if not args.script:
+            print("FAIL: --script needed for script gate")
+            sys.exit(1)
+        checks = audit_script(read(args.script))
+    elif args.project:
+        checks, err = audit_project(args.project)
+        if err:
+            print(f"FAIL: {err}")
+            sys.exit(1)
+        if args.script:
+            checks += audit_script(read(args.script))
+        else:
+            checks.append(Check("A0", "Script", "Script audit skipped (no --script)", 0, False,
+                                 "35 points at stake; pass --script script.txt"))
     else:
-        checks.append(Check("A0", "Script", "Script audit skipped (no --script)", 0, False,
-                             "35 points at stake; pass --script script.txt"))
+        print("FAIL: pass --project and/or --script")
+        sys.exit(1)
 
     hf_gate, hf_err = (None, None)
     if args.run_check:

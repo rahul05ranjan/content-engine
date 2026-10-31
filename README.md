@@ -38,11 +38,17 @@ python engine/benchmark.py --project ./my-video --script script.txt --run-check
 
 | Path | What |
 |---|---|
+| `docs/PIPELINE.md` | **The zero-setup workflow** — topic → script gate → VO → BGM → build → gates → render → SEO → publish. An agent reads this and starts producing. |
+| `docs/LEARNINGS.md` | **The complete knowledge base** — every learned rule: hook science (4 mistakes), viewer-first formula, oven moment, persona scripting, viral DNA, visual/motion craft, banned tells, audio craft (delivery cues, ducking, SFX), QA gates, growth & money math, hard-won production lessons. |
 | `BENCHMARK.md` | The 100-point benchmark — every rule, why it exists, and its source (Tanmay Bhat, Callaway, retention science, HyperFrames craft docs) |
-| `engine/benchmark.py` | Automated scorer + render gate (static project audit + optional `hyperframes check`) |
+| `engine/benchmark.py` | Automated scorer + render gate (script-only mode AND project audit mode) |
 | `formats/TheCuriousCastOg.md` | Channel format v1.1 — the first channel spec (identity, script formula, visual/audio standards, outro, SEO) |
 | `templates/vo_gen_template.py` | Gemini TTS VO generator (key rotation, backoff, skip-existing, per-segment emotional delivery cues) |
-| `templates/seo_template.md` | SEO package template (title/description/tags/pinned comment) |
+| `templates/seo_template.md` | SEO package template (title/description/tags/pinned comment/IG) |
+
+## The zero-setup promise
+
+Give any agent this repo and a topic. It reads `docs/PIPELINE.md` + `docs/LEARNINGS.md` + `formats/<Channel>.md`, and produces a benchmark-passing video end-to-end: script → gate → VO → build → gate → render → SEO. No hidden state, no external dependencies beyond Node + FFmpeg + a Gemini key.
 
 ## The rules the engine encodes
 
