@@ -1,5 +1,6 @@
 # CHANNEL FORMAT SPEC — The Curious Cast (@TheCuriousCastOg)
-**Version 1.0 — LOCKED Oct 30, 2026. Any agent on any machine MUST follow this exact format.**
+**Version 1.2 — LOCKED Oct 31, 2026. Any agent on any machine MUST follow this exact format.**
+**RENDER ENGINE: HyperFrames ONLY (Remotion retired Oct 31, user directive).**
 **File ki copy har machine pe honi chahiye. Naya agent = ye file padho, phir video banao.**
 
 ---
